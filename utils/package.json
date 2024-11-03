@@ -1,0 +1,17 @@
+{
+    "name": "token-management",
+    "version": "1.0.0",
+    "description": "A simple token generation and management system with blacklisting functionality.",
+    "main": "generateToken.js",
+    "scripts": {
+      "generate": "node generateToken.js generate",
+      "blacklist": "node generateToken.js blacklist"
+    },
+    "dependencies": {
+      "dotenv": "^16.0.0",
+      "jsonwebtoken": "^9.0.0"
+    },
+    "author": "Muhammad Usman",
+    "license": "ISC"
+  }
+  

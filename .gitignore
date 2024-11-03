@@ -1,0 +1,28 @@
+# Root .gitignore for both frontend and backend
+
+# Node.js modules
+**/node_modules/
+
+# Logs
+**/logs/
+*.log
+
+# Ignore any temporary or local environment files
+**/.env
+**/.env.local
+**/.DS_Store
+
+# Frontend build files
+frontend/build/
+frontend/.next/          # If using Next.js
+frontend/dist/           # If using a bundler like Webpack
+
+# Backend specific ignores
+backend/*.log            # Backend log files
+backend/temp/            # Temporary files if any
+backend/db/              # Example if you store database files here
+
+# Ignore OS or editor specific files
+.vscode/
+.idea/
+*.swp

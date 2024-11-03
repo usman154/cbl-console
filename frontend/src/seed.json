@@ -1,0 +1,18 @@
+[
+    {
+        "jobType": "PURCHASE_DELETE",
+        "name": "Fetch Cancelled Records"
+    },
+    {
+        "jobType": "PURCHASE_REFRESH",
+        "name": "Refresh List"
+    },
+    {
+        "jobType": "PURCHASE_LIST",
+        "name": "Fetch All Records"
+    },
+    {
+        "jobType": "PURCHASE_PROCESS",
+        "name": "Process Records"
+    }
+]
