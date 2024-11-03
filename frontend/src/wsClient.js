@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useToken } from './TokenContext';
 
-const useWebSocket = () => {
+const useWebSocket = (addLogEntry) => {
   const [jobStatuses, setJobStatuses] = useState({});
   const { token } = useToken();
 
@@ -26,15 +26,18 @@ const useWebSocket = () => {
       }
 
       const { jobType, status , type, message: logMessage } = JSON.parse(message.data);
-      
+      const isLog = type === 'log';
       // Update jobStatuses with a new object to ensure re-render
       setJobStatuses((prevStatuses) => ({
         ...prevStatuses,
         [jobType]: {
           status: status || prevStatuses[jobType]?.status || 'pending',
-          logs: type === 'log' ? [...(prevStatuses[jobType]?.logs || []), logMessage] : (prevStatuses[jobType]?.logs || []),
+          logs: isLog ? [...(prevStatuses[jobType]?.logs || []), logMessage] : (prevStatuses[jobType]?.logs || []),
         },  // Updated status structure for simplicity
       }));
+      if (isLog) {
+        addLogEntry(jobType, logMessage);
+      }
     };
 
     return () => ws.close();

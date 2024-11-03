@@ -19,10 +19,20 @@ import CloseIcon from "@mui/icons-material/Close";
 
 const App = () => {
   const { token } = useToken();
-  const jobStatuses = useWebSocket();
+  
   const [selectedJob, setSelectedJob] = useState(null); // Track which job to view logs for
   const [isModalOpen, setIsModalOpen] = useState(false); 
+  const [jobLogs, setJobLogs] = useState({}); // Track logs for each job type
 
+
+
+  const addLogEntry = (jobType, logEntry) => {
+    setJobLogs((prevLogs) => ({
+      ...prevLogs,
+      [jobType]: [...(prevLogs[jobType] || []), logEntry], 
+    }));
+  };
+  const jobStatuses = useWebSocket(addLogEntry);
   useEffect(() => {
     console.log("jobStatuses updated:", jobStatuses);
   }, [jobStatuses]);
@@ -32,7 +42,14 @@ const App = () => {
 
   const handleStartJob = async (jobType) => {
     // Execute the job
-    const result = await startJob(token, jobType);
+    if (jobStatuses[jobType] && jobStatuses[jobType].status === 'completed' || jobStatuses[jobType] && jobStatuses[jobType].status === 'error') {
+      // Clear logs for that jobType
+      setJobLogs((prevLogs) => ({
+        ...prevLogs,
+        [jobType]: [], 
+      }));
+    }
+     await startJob(token, jobType);
   };
   const openLogViewer = (jobType) => {
     setSelectedJob(jobType);
@@ -43,6 +60,7 @@ const App = () => {
     setIsModalOpen(false);
     setSelectedJob(null);
   };
+  
   return (
     <Grid
       container
@@ -65,6 +83,7 @@ const App = () => {
             <Grid container alignItems="center" key={jobType}>
               <Grid item xs={10}>
                 <Button
+                  disabled={jobStatuses[jobType] && jobStatuses[jobType].status === 'running'}
                   variant="contained"
                   color="primary"
                   onClick={() => handleStartJob(jobType)}
@@ -75,14 +94,17 @@ const App = () => {
               </Grid>
               <Grid item xs={2} style={{ textAlign: "right" }}>
                 <Chip
-                  label={jobStatuses[jobType]}
+                  label={jobStatuses[jobType] ? jobStatuses[jobType].status : 'idle'}
                   color={
-                    jobStatuses[jobType] === "completed"
+                    jobStatuses[jobType] && jobStatuses[jobType].status === "completed"
                       ? "success"
-                      : jobStatuses[jobType] === "error"
+                      : jobStatuses[jobType] && jobStatuses[jobType].status === "error"
                       ? "error"
+                      : jobStatuses[jobType] && jobStatuses[jobType].status === "running"
+                      ? "warning"
                       : "default"
                   }
+                  
                   size="small"
                 />
                 <Button
@@ -117,7 +139,7 @@ const App = () => {
               </IconButton>
             </DialogTitle>
             <DialogContent dividers>
-              {selectedJob && <LogViewer jobType={selectedJob} />}
+            {selectedJob && <LogViewer jobType={selectedJob} logs={jobLogs[selectedJob] || []} />}
             </DialogContent>
           </Dialog>
         </Box>

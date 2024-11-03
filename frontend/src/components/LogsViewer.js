@@ -1,42 +1,20 @@
-import React, { useEffect, useRef } from 'react';
-import { Box, Typography } from '@mui/material';
-import useWebSocket from '../wsClient';
+import React from 'react';
+import { Box } from '@mui/material';
+import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
+import { darcula } from 'react-syntax-highlighter/dist/esm/styles/prism';
 
-export const LogViewer = ({ jobType }) => {
-  const jobStatuses = useWebSocket();
-  const logs = jobStatuses[jobType]?.logs || [];
-  const logsEndRef = useRef(null);
-
-  useEffect(() => {
-    logsEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [logs]);
-
-  return (
-    <Box
-      sx={{
-        border: '1px solid #ccc',
-        padding: '10px',
-        borderRadius: '5px',
-        height: '300px',
-        overflowY: 'scroll',
-        backgroundColor: '#f9f9f9',
-      }}
-    >
-      <Typography variant="h6">Logs for {jobType}</Typography>
-      {logs.map((log, index) => (
-        <Typography
-          key={index}
-          style={{
-            fontFamily: 'monospace',
-            fontSize: '12px',
-            color: '#333',
-          }}
-        >
-          {log}
-        </Typography>
-      ))}
-      <div ref={logsEndRef} />
+export const LogViewer = ({ jobType, logs }) => (
+  
+  <Box>
+    <h3>Logs for {jobType}</h3>
+    <Box component="pre" sx={{ whiteSpace: 'pre-wrap', wordWrap: 'break-word' }}>
+      <SyntaxHighlighter
+        showLineNumbers={true}
+        language="javascript"
+        style={darcula}
+      >
+        {logs.join('\n')}
+      </SyntaxHighlighter>
     </Box>
-  );
-};
-
+  </Box>
+);

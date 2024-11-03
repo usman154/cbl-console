@@ -6,6 +6,7 @@
 # Logs
 **/logs/
 *.log
+CBL_PROD
 
 # Ignore any temporary or local environment files
 **/.env
