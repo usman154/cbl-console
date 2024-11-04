@@ -16,6 +16,7 @@ import {
   DialogTitle,
   DialogContent,
   IconButton,
+  Typography,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 
@@ -99,6 +100,7 @@ const App = () => {
                 </Grid>
                 <Grid item xs={2} style={{ textAlign: "right" }}>
                   <Chip
+                  sx={{textTransform: 'uppercase'}}
                     label={jobStatuses[jobType] ? jobStatuses[jobType].status : 'idle'}
                     color={
                       jobStatuses[jobType] && jobStatuses[jobType].status === "completed"
@@ -116,7 +118,7 @@ const App = () => {
                     variant="text"
                     onClick={() => openLogViewer(jobType)} // Open modal on click
                   >
-                    View
+                    Logs
                   </Button>
                 </Grid>
               </Grid>
@@ -137,7 +139,12 @@ const App = () => {
                   <span style={{ ...terminalDialogStyles.dot, ...terminalDialogStyles.yellow }} />
                   <span style={{ ...terminalDialogStyles.dot, ...terminalDialogStyles.green }} />
                 </Box>
-                Logs for {selectedJob}
+                <Typography sx={{
+                  color: '#00ff00',
+                  fontFamily: '"Courier New", Courier, monospace',
+                }} >
+                  Logs for {selectedJob}
+                </Typography>
                 <IconButton
 
                   aria-label="close"

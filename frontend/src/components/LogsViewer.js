@@ -6,7 +6,7 @@ import { darcula } from 'react-syntax-highlighter/dist/esm/styles/prism';
 export const LogViewer = ({ jobType, logs }) => (
   
   <Box>
-    <h3>Logs for {jobType}</h3>
+     
     <Box component="pre" >
       <SyntaxHighlighter
         showLineNumbers={true}

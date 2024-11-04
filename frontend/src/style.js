@@ -9,14 +9,13 @@ export const CUSTOM_STYLES = {
         },
         title: {
             position: 'relative',
+            display: 'flex',
             padding: '8px',
             backgroundColor: '#333', // Dark header background
             color: '#fff', // White text for header
         },
         closeButton: {
-            position: 'absolute',
-            right: 8,
-            top: 8,
+            
             color: '#ff5f56', // Red color for close icon
         },
         headerDotsContainer: {

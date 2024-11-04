@@ -1,5 +1,5 @@
-import React from "react";
-import { Box, Typography } from "@mui/material";
+import React, { useCallback } from "react";
+import { Box, Typography, Button } from "@mui/material";
 import { styled } from "@mui/system";
 import Logo from "../assets/logo.png"; // Adjust the path to your logo image
 
@@ -13,6 +13,7 @@ const HeaderContainer = styled(Box)(({ theme }) => ({
     borderRadius: "8px",
     boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.1)",
     marginBottom: theme.spacing(3),
+    textTransform: 'uppercase'
 }));
 
 // Logo image styling
@@ -30,19 +31,29 @@ const Title = styled(Typography)({
 // Subtitle styles
 const Subtitle = styled(Typography)({
     fontWeight: "300",
-    opacity: 0.9,
-   
+    opacity: 1,
+    fontSize: 'smaller'
+
 });
 
 export const Header = () => {
+    const logout = useCallback(() => {
+        localStorage.clear();
+        window.location.reload();
+    }, []);
     return (
         <HeaderContainer>
-            <Box display="flex" alignItems="center">
-                <LogoImage src={Logo} alt="CBL Logo" />
-                <Box display="flex" alignItems="baseline" flexDirection={'column'}>
-                    <Title>CBL Job Runner</Title>
-                    <Subtitle>Manage and monitor your job executions seamlessly</Subtitle>
+            <Box display="flex" flexGrow={'1'} alignItems="center" justifyContent="space-between">
+
+                <Box display="flex" alignItems={'center'} >
+                    <LogoImage src={Logo} alt="CBL Logo" />
+                    <Box display="flex" alignItems="baseline" flexDirection={'column'}>
+                        <Title>CBL Job Runner</Title>
+                        <Subtitle>Manage and monitor your job executions seamlessly</Subtitle>
+                    </Box>
+
                 </Box>
+                <Button variant="contained" color="error" onClick={logout}>LogO Out</Button>
 
             </Box>
 
