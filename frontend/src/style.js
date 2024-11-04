@@ -13,6 +13,9 @@ export const CUSTOM_STYLES = {
             padding: '8px',
             backgroundColor: '#333', // Dark header background
             color: '#fff', // White text for header
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center'
         },
         closeButton: {
             
