@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { startJob } from "./api";
 import { LogViewer } from "./components/LogsViewer";
+import { Header as PageHeader } from "./components/TitlePage";
 import { useToken } from "./TokenContext";
 import { TokenInput } from "./components/TokenInput";
 import useWebSocket from "./wsClient";
@@ -64,93 +65,97 @@ const App = () => {
   };
 
   return (
-    <Grid
-      container
-      justifyContent="center"
-      alignItems="center"
-      style={{ height: "100vh" }}
-    >
-      <Grid item xs={12} sm={6}>
-        <Box
-          sx={{
-            backgroundColor: "#f0f0f0",
-            padding: "20px",
-            borderRadius: "8px",
-            display: "flex",
-            flexDirection: "column",
-            gap: 2,
-          }}
-        >
-          {jobs.map(({ jobType, name }) => (
-            <Grid container alignItems="center" key={jobType}>
-              <Grid item xs={10}>
-                <Button
-                  disabled={jobStatuses[jobType] && jobStatuses[jobType].status === 'running'}
-                  variant="contained"
-                  color="primary"
-                  onClick={() => handleStartJob(jobType)}
-                  fullWidth
-                >
-                  {`Start ${name}`}
-                </Button>
-              </Grid>
-              <Grid item xs={2} style={{ textAlign: "right" }}>
-                <Chip
-                  label={jobStatuses[jobType] ? jobStatuses[jobType].status : 'idle'}
-                  color={
-                    jobStatuses[jobType] && jobStatuses[jobType].status === "completed"
-                      ? "success"
-                      : jobStatuses[jobType] && jobStatuses[jobType].status === "error"
-                        ? "error"
-                        : jobStatuses[jobType] && jobStatuses[jobType].status === "running"
-                          ? "warning"
-                          : "default"
-                  }
-
-                  size="small"
-                />
-                <Button
-                  variant="text"
-                  onClick={() => openLogViewer(jobType)} // Open modal on click
-                >
-                  View
-                </Button>
-              </Grid>
-            </Grid>
-          ))}
-          {/* Modal to display LogViewer */}
-          <Dialog
-            open={isModalOpen}
-            onClose={closeModal}
-            fullWidth
-            PaperProps={{
-              sx: terminalDialogStyles.modal,
+    <>
+      <PageHeader />
+      <Grid
+        container
+        justifyContent="center"
+        alignItems="center"
+        style={{ height: "100vh" }}
+      >
+        <Grid item xs={12} sm={6}>
+          <Box
+            sx={{
+              backgroundColor: "#f0f0f0",
+              padding: "20px",
+              borderRadius: "8px",
+              display: "flex",
+              flexDirection: "column",
+              gap: 2,
             }}
-            maxWidth="md"
           >
-            <DialogTitle sx={terminalDialogStyles.title}>
-              Logs for {selectedJob}
-              <IconButton
+            {jobs.map(({ jobType, name }) => (
+              <Grid container alignItems="center" key={jobType}>
+                <Grid item xs={10}>
+                  <Button
+                    disabled={jobStatuses[jobType] && jobStatuses[jobType].status === 'running'}
+                    variant="contained"
+                    color="primary"
+                    onClick={() => handleStartJob(jobType)}
+                    fullWidth
+                  >
+                    {`Start ${name}`}
+                  </Button>
+                </Grid>
+                <Grid item xs={2} style={{ textAlign: "right" }}>
+                  <Chip
+                    label={jobStatuses[jobType] ? jobStatuses[jobType].status : 'idle'}
+                    color={
+                      jobStatuses[jobType] && jobStatuses[jobType].status === "completed"
+                        ? "success"
+                        : jobStatuses[jobType] && jobStatuses[jobType].status === "error"
+                          ? "error"
+                          : jobStatuses[jobType] && jobStatuses[jobType].status === "running"
+                            ? "warning"
+                            : "default"
+                    }
 
-                aria-label="close"
-                onClick={closeModal}
-                sx={terminalDialogStyles.closeButton}
-              >
-                <CloseIcon />
-              </IconButton>
-            </DialogTitle>
-            <DialogContent dividers sx={terminalDialogStyles.content}>
-              <Box sx={terminalDialogStyles.headerDotsContainer}>
-                <span style={{ ...terminalDialogStyles.dot, ...terminalDialogStyles.red }} />
-                <span style={{ ...terminalDialogStyles.dot, ...terminalDialogStyles.yellow }} />
-                <span style={{ ...terminalDialogStyles.dot, ...terminalDialogStyles.green }} />
-              </Box>
-              {selectedJob && <LogViewer jobType={selectedJob} logs={jobLogs[selectedJob] || []} />}
-            </DialogContent>
-          </Dialog>
-        </Box>
+                    size="small"
+                  />
+                  <Button
+                    variant="text"
+                    onClick={() => openLogViewer(jobType)} // Open modal on click
+                  >
+                    View
+                  </Button>
+                </Grid>
+              </Grid>
+            ))}
+            {/* Modal to display LogViewer */}
+            <Dialog
+              open={isModalOpen}
+              onClose={closeModal}
+              fullWidth
+              PaperProps={{
+                sx: terminalDialogStyles.modal,
+              }}
+              maxWidth="md"
+            >
+              <DialogTitle sx={terminalDialogStyles.title}>
+                <Box sx={terminalDialogStyles.headerDotsContainer}>
+                  <span style={{ ...terminalDialogStyles.dot, ...terminalDialogStyles.red }} />
+                  <span style={{ ...terminalDialogStyles.dot, ...terminalDialogStyles.yellow }} />
+                  <span style={{ ...terminalDialogStyles.dot, ...terminalDialogStyles.green }} />
+                </Box>
+                Logs for {selectedJob}
+                <IconButton
+
+                  aria-label="close"
+                  onClick={closeModal}
+                  sx={terminalDialogStyles.closeButton}
+                >
+                  <CloseIcon />
+                </IconButton>
+              </DialogTitle>
+              <DialogContent dividers sx={terminalDialogStyles.content}>
+
+                {selectedJob && <LogViewer jobType={selectedJob} logs={jobLogs[selectedJob] || []} />}
+              </DialogContent>
+            </Dialog>
+          </Box>
+        </Grid>
       </Grid>
-    </Grid>
+    </>
   );
 };
 

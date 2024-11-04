@@ -7,18 +7,13 @@ export const LogViewer = ({ jobType, logs }) => (
   
   <Box>
     <h3>Logs for {jobType}</h3>
-    <Box component="pre" sx={{ whiteSpace: 'pre-wrap', wordWrap: 'break-word' }}>
+    <Box component="pre" >
       <SyntaxHighlighter
         showLineNumbers={true}
+        lineProps={{style: {flexWrap: 'wrap', wordBreak: 'break-all', whiteSpace: 'pre-wrap'}}}
         language="javascript"
-        sx={{
-          whiteSpace: 'pre-wrap',
-          wordBreak: 'break-word',
-          overflowWrap: 'break-word',
-          fontSize: '0.875rem',
-          lineHeight: 1.5,
-          margin: 0,
-        }}
+        wrapLongLines={true}
+      
         style={darcula}
       >
         {logs.join('\n')}
