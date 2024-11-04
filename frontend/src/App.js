@@ -4,6 +4,7 @@ import { LogViewer } from "./components/LogsViewer";
 import { useToken } from "./TokenContext";
 import { TokenInput } from "./components/TokenInput";
 import useWebSocket from "./wsClient";
+import { CUSTOM_STYLES } from './style.js';
 import jobs from "./seed.json";
 import {
   Grid,
@@ -19,9 +20,10 @@ import CloseIcon from "@mui/icons-material/Close";
 
 const App = () => {
   const { token } = useToken();
-  
+  const { terminalDialogStyles } = CUSTOM_STYLES;
+
   const [selectedJob, setSelectedJob] = useState(null); // Track which job to view logs for
-  const [isModalOpen, setIsModalOpen] = useState(false); 
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [jobLogs, setJobLogs] = useState({}); // Track logs for each job type
 
 
@@ -29,7 +31,7 @@ const App = () => {
   const addLogEntry = (jobType, logEntry) => {
     setJobLogs((prevLogs) => ({
       ...prevLogs,
-      [jobType]: [...(prevLogs[jobType] || []), logEntry], 
+      [jobType]: [...(prevLogs[jobType] || []), logEntry],
     }));
   };
   const jobStatuses = useWebSocket(addLogEntry);
@@ -46,10 +48,10 @@ const App = () => {
       // Clear logs for that jobType
       setJobLogs((prevLogs) => ({
         ...prevLogs,
-        [jobType]: [], 
+        [jobType]: [],
       }));
     }
-     await startJob(token, jobType);
+    await startJob(token, jobType);
   };
   const openLogViewer = (jobType) => {
     setSelectedJob(jobType);
@@ -60,7 +62,7 @@ const App = () => {
     setIsModalOpen(false);
     setSelectedJob(null);
   };
-  
+
   return (
     <Grid
       container
@@ -99,12 +101,12 @@ const App = () => {
                     jobStatuses[jobType] && jobStatuses[jobType].status === "completed"
                       ? "success"
                       : jobStatuses[jobType] && jobStatuses[jobType].status === "error"
-                      ? "error"
-                      : jobStatuses[jobType] && jobStatuses[jobType].status === "running"
-                      ? "warning"
-                      : "default"
+                        ? "error"
+                        : jobStatuses[jobType] && jobStatuses[jobType].status === "running"
+                          ? "warning"
+                          : "default"
                   }
-                  
+
                   size="small"
                 />
                 <Button
@@ -121,25 +123,29 @@ const App = () => {
             open={isModalOpen}
             onClose={closeModal}
             fullWidth
+            PaperProps={{
+              sx: terminalDialogStyles.modal,
+            }}
             maxWidth="md"
           >
-            <DialogTitle>
+            <DialogTitle sx={terminalDialogStyles.title}>
               Logs for {selectedJob}
               <IconButton
+
                 aria-label="close"
                 onClick={closeModal}
-                sx={{
-                  position: "absolute",
-                  right: 8,
-                  top: 8,
-                  color: (theme) => theme.palette.grey[500],
-                }}
+                sx={terminalDialogStyles.closeButton}
               >
                 <CloseIcon />
               </IconButton>
             </DialogTitle>
-            <DialogContent dividers>
-            {selectedJob && <LogViewer jobType={selectedJob} logs={jobLogs[selectedJob] || []} />}
+            <DialogContent dividers sx={terminalDialogStyles.content}>
+              <Box sx={terminalDialogStyles.headerDotsContainer}>
+                <span style={{ ...terminalDialogStyles.dot, ...terminalDialogStyles.red }} />
+                <span style={{ ...terminalDialogStyles.dot, ...terminalDialogStyles.yellow }} />
+                <span style={{ ...terminalDialogStyles.dot, ...terminalDialogStyles.green }} />
+              </Box>
+              {selectedJob && <LogViewer jobType={selectedJob} logs={jobLogs[selectedJob] || []} />}
             </DialogContent>
           </Dialog>
         </Box>

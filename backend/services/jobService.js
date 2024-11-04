@@ -26,14 +26,23 @@ function startJob(userId, jobType) {
     startedBy: userId,
   });
 
+  const heartbeatInterval = setInterval(() => {
+    if (jobStatus.get(jobType)?.status === "running") {
+      notifyAllClients({ jobId, jobType, status: "running", type: "heartbeat", message: "Job is still running..." });
+    }
+  }, 5000);
+
   jobProcess.stdout.on("data", (data) => {
+    jobStatus.set(jobType, { ...jobStatus.get(jobType), status : 'running' });
     notifyAllClients({ jobId, jobType, status: "running", type: 'log', message: data.toString()  });
   });
   jobProcess.stderr.on("data", (data) => {
+    jobStatus.set(jobType, { ...jobStatus.get(jobType), status: 'error' });
     notifyAllClients({ jobId, jobType, status: "error", type: 'log', message: data.toString()  });
   });
   jobProcess.on("error", (err) => {
     console.error(`Failed to start process: ${err.message}`);
+    jobStatus.set(jobType, { ...jobStatus.get(jobType), status: 'error' });
     notifyAllClients({ jobId, jobType, status: "error", type: 'log', message: data.toString()  });
   });
   
@@ -42,7 +51,7 @@ function startJob(userId, jobType) {
     console.log("completed the job");
     const status = code === 0 ? "completed" : "error";
     jobStatus.set(jobType, { ...jobStatus.get(jobType), status });
-
+    clearInterval(heartbeatInterval);
     // Notify all clients about the job status update
     notifyAllClients({ jobId, jobType, status });
   });

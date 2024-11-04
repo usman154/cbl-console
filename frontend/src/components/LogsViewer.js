@@ -11,6 +11,14 @@ export const LogViewer = ({ jobType, logs }) => (
       <SyntaxHighlighter
         showLineNumbers={true}
         language="javascript"
+        sx={{
+          whiteSpace: 'pre-wrap',
+          wordBreak: 'break-word',
+          overflowWrap: 'break-word',
+          fontSize: '0.875rem',
+          lineHeight: 1.5,
+          margin: 0,
+        }}
         style={darcula}
       >
         {logs.join('\n')}
