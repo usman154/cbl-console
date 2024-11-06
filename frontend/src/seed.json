@@ -1,18 +1,22 @@
 [
     {
         "jobType": "PURCHASE_DELETE",
-        "name": "Fetch Cancelled Records"
+        "name": "Fetch Cancelled Records",
+        "description": "This function retrieves all purchase requests from the CBL that have been cancelled by customers. It identifies requests marked with a cancellation status, allowing for effective management of these transactions. This ensures that any necessary actions, such as processing refunds or updating records, are conducted."
     },
     {
         "jobType": "PURCHASE_REFRESH",
-        "name": "Refresh List"
+        "name": "Refresh List",
+        "description": "The 'Refresh List' action updates the queue of pending purchase requests to ensure it reflects the most current information. This step is crucial before fetching or processing new requests, as it synchronizes the system with any recent changes. By doing this, it helps prevent errors caused by outdated data."
     },
     {
         "jobType": "PURCHASE_LIST",
-        "name": "Fetch All Records"
+        "name": "Fetch All Records",
+        "description": "This action pulls in a comprehensive list of all purchase requests submitted by customers to the CBL system. It includes requests of various statuses, providing a complete overview for further processing. This full visibility is essential for decision-making and ensures that all customer interactions are accounted for.,"
     },
     {
         "jobType": "PURCHASE_PROCESS",
-        "name": "Process Records"
+        "name": "Process Records",
+        "description": "The 'Process Records' function analyzes each request to determine its validity based on predefined criteria, such as customer balance and other flags. It decides whether a request should be approved, processed, or declined based on this evaluation. This step is vital for maintaining the integrity of the processing workflow and ensuring compliance with business rules."
     }
 ]
